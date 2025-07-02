@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>探索无限 - 技术与创意的交汇点</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -81,6 +82,144 @@
                 transform: translateY(0px);
             }
         }
+
+        .s-hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: #f1f0f9;
+            color: #0c0b0e;
+            font-family: "Fira Sans", sans-serif;
+        }
+
+        .s-scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0c0b0e;
+            clip-path: inset(100%);
+            color: #f1f0f9;
+            pointer-events: none;
+        }
+
+        .s__title {
+            position: absolute;
+            top: 2vw;
+            left: 2vw;
+            margin: 0;
+            padding: 0;
+            font-size: 1.25vw;
+        }
+
+        .s__catcher {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            font-weight: 700;
+            font-size: 13vw;
+            letter-spacing: -0.025em;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .s__burger {
+            position: absolute;
+            top: 2vw;
+            right: 2vw;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            width: 56px;
+            height: 48px;
+        }
+
+        .s__burger__line {
+            margin: 5px 0;
+            width: 100%;
+            height: 2px;
+            background: #0c0b0e;
+        }
+
+        .s__title {
+            position: absolute;
+            top: 2vw;
+            right: 2vw;
+            left: 2vw;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            font-weight: 700;
+            font-size: 13vw;
+            letter-spacing: -0.025em;
+            line-height: 0.9;
+        }
+
+        .s__title__line:nth-child(2) {
+            margin-left: auto;
+        }
+
+        .s__word {
+            --max-scale: 3;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            font-family: "Climate Crisis", sans-serif;
+            font-size: 20vw;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        @keyframes char-scale {
+            0% {
+                scale: 1 0.1;
+            }
+            50% {
+                scale: 1 var(--max-scale);
+            }
+            100% {
+                scale: 1 0.1;
+            }
+        }
+
+        .s__word__char {
+            animation: char-scale 1.25s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+            transform-origin: 50% 86.5%;
+        }
+
+        .s__word__char:nth-child(1) {
+            color: #fe6319;
+        }
+
+        .s__word__char:nth-child(2) {
+            color: #ff68a8;
+            animation-delay: 0.25s;
+        }
+
+        .s__word__char:nth-child(3) {
+            color: #009800;
+            animation-delay: 0.5s;
+        }
+
+        .cursor {
+            position: fixed;
+            top: -1.5vw;
+            left: -1.5vw;
+            z-index: 2;
+            width: 3vw;
+            height: 3vw;
+            background: #88f901;
+            border-radius: 50%;
+            transform: translate3d(var(--x), var(--y), 0);
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -127,15 +266,54 @@
 <!-- 英雄区域 -->
 <section id="home" class="min-h-screen relative flex items-center justify-center overflow-hidden">
     <!-- 背景装饰 -->
-    <div class="absolute inset-0 bg-gradient-to-br from-dark to-primary/80 z-0"></div>
+<!--    <div class="absolute inset-0 bg-gradient-to-br from-dark to-primary/80 z-0"></div>
     <div class="absolute inset-0 overflow-hidden">
         <div class="absolute top-10 left-10 w-64 h-64 rounded-full bg-accent/20 blur-3xl animate-float"></div>
         <div class="absolute bottom-20 right-10 w-80 h-80 rounded-full bg-secondary/20 blur-3xl animate-float-delay-1"></div>
         <div class="absolute top-1/3 right-1/4 w-40 h-40 rounded-full bg-primary/30 blur-3xl animate-float-delay-2"></div>
-    </div>
+    </div>-->
+
+    <!-- 新的 Hero 动画区域 -->
+    <div class="s-hero">
+        <h1 class="s__title">
+            100 Day Challenge<br/>
+            by Suz Sirunyan<br/>
+            Day 88/100
+        </h1>
+
+        <div class="s__catcher">
+            Sunsigang space
+        </div>
+
+        <div class="s__burger">
+            <div class="s__burger__line"></div>
+            <div class="s__burger__line"></div>
+            <div class="s__burger__line"></div>
+        </div>
+    </div><!-- .s-hero -->
+
+    <div class="s-scene js-scene">
+        <div class="s__title">
+            <div class="s__title__line">
+                We Are All
+            </div>
+            <div class="s__title__line">
+                A Little Bit
+            </div>
+        </div>
+
+        <div class="s__word js-word">
+            <div class="s__word__char">M</div>
+            <div class="s__word__char">A</div>
+            <div class="s__word__char">D</div>
+        </div>
+    </div><!-- .s-scene -->
+
+    <div class="cursor js-cursor"></div>
+
 
     <div class="container mx-auto px-4 z-10 pt-20">
-        <div class="max-w-4xl mx-auto text-center">
+<!--        <div class="max-w-4xl mx-auto text-center">
             <div class="inline-block px-4 py-1 rounded-full bg-white/10 backdrop-blur-sm text-white text-sm font-medium mb-6">
                 <span class="animate-pulse">🔥</span> 技术 | 创意 | 探索
             </div>
@@ -155,7 +333,7 @@
                     查看项目 <i class="fa-solid fa-rocket ml-2"></i>
                 </a>
             </div>
-        </div>
+        </div>-->
 
         <!-- 滚动提示 -->
         <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
@@ -984,4 +1162,168 @@
           `
         },
     ]
+
+    // 选择器：获取页面元素
+    const scene = document.querySelector('.js-scene')
+    const cursor = document.querySelector('.js-cursor')
+    const word = document.querySelector('.js-word')
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // 开始动画
+                requestAnimationFrame(render);
+                observer.unobserve(scene); // 只执行一次
+            }
+        });
+    }, { threshold: 0.2 });
+
+    observer.observe(scene);
+
+    // 鼠标相关变量
+    const mouse = {
+        x: 0,
+        y: 0,
+        smoothX: 0,
+        smoothY: 0,
+        diff: 0,
+        smoothDiff: 0,
+        a: 0
+    }
+
+    // 视口尺寸
+    const viewport = {
+        width: window.innerWidth,
+        height: window.innerHeight
+    }
+
+    // 粒子数组
+    const particles = []
+    let particleCnt = 0
+
+    function onMouseMove(e) {
+        mouse.x = e.pageX
+        mouse.y = e.pageY
+    }
+
+    window.addEventListener('mousemove', onMouseMove)
+
+    function onResize() {
+        viewport.width = window.innerWidth
+        viewport.height = window.innerHeight
+        const wordHeight = word.clientHeight
+        const maxScale = viewport.height / (word.clientHeight * 0.75)
+        word.style.setProperty('--max-scale', maxScale)
+    }
+
+    window.addEventListener('resize', onResize)
+    onResize()
+
+    function emitParticle() {
+        let x = 0
+        let y = 0
+        let size = 0
+
+        if (mouse.diff > 0.01) {
+            x = mouse.smoothX
+            y = mouse.smoothY
+            size = mouse.diff * 0.2
+        }
+
+        if (size === 0) return
+
+        const particle = new Particle(x, y, size)
+        particleCnt += 5
+        particles.push(particle)
+    }
+
+    function drawPath() {
+        let d = ''
+        particles.forEach((particle, i) => {
+            const cmd = i === 0 ? 'M' : 'L'
+            const p1 = particle.position()
+            const particle2 = particles[i + 1] || particles[particles.length - 1]
+            const p2 = particle2.position()
+
+            if (i > 0) {
+                d += `Q ${p1.x} ${p1.y} ${(p1.x + p2.x) / 2} ${(p1.y + p2.y) / 2} `
+            } else {
+                d += `${cmd} ${p1.x} ${p1.y} `
+            }
+        })
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const particle = particles[i]
+            const p1 = particle.position(1)
+            const particle2 = particles[i - 1] || particles[0]
+            const p2 = particle2.position(1)
+            d += `Q ${p1.x} ${p1.y} ${(p1.x + p2.x) / 2} ${(p1.y + p2.y) / 2} `
+        }
+
+        scene.style.clipPath = `path('${d}')`
+    }
+
+    function render(time) {
+        mouse.smoothX += (mouse.x - mouse.smoothX) * 0.1
+        mouse.smoothY += (mouse.y - mouse.smoothY) * 0.1
+
+        const dx = mouse.x - mouse.smoothX
+        const dy = mouse.y - mouse.smoothY
+        mouse.diff = Math.hypot(dx, dy)
+        mouse.smoothDiff += (mouse.diff - mouse.smoothDiff) * 0.1
+
+        if (mouse.diff > 0.1) {
+            mouse.a = Math.atan2(dy, dx)
+        }
+
+        emitParticle()
+
+        cursor.style.setProperty('--x', mouse.smoothX + 'px')
+        cursor.style.setProperty('--y', mouse.smoothY + 'px')
+
+        drawPath()
+
+        requestAnimationFrame(render)
+    }
+
+    window.addEventListener('load', render)
+
+    class Particle {
+        constructor(x, y, size) {
+            this.size = size
+            this.x = x
+            this.y = y
+            this.p = 0
+            const perpendicular = mouse.a + Math.PI / 2
+            const dist = Math.max(viewport.width * 0.0075, mouse.smoothDiff)
+            this.offsetX = dist * Math.cos(perpendicular)
+            this.offsetY = dist * Math.sin(perpendicular)
+
+            const tl = gsap.timeline()
+            tl.to(this, {
+                p: 1,
+                ease: 'power1.inOut',
+                duration: 2
+            }).to(this, {
+                p: 0,
+                ease: 'power4.in',
+                duration: 4
+            }, 3).call(this.kill.bind(this))
+        }
+
+        position(direction = -1) {
+            return {
+                x: this.x + this.offsetX * direction * this.p,
+                y: this.y + this.offsetY * direction * this.p
+            }
+        }
+
+        kill() {
+            particles.forEach((particle, index) => {
+                if (particle === this) {
+                    particles.splice(index, 1)
+                }
+            })
+        }
+    }
 </script>

@@ -3,22 +3,29 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="搜索">
-    <div class="search-container">
-        <!-- Header Section -->
-        <header class="search-header">
-            <h1>搜索文章</h1>
-            <p>输入关键词快速找到相关内容</p>
-        </header>
+    <div class="max-w-4xl mx-auto px-6 py-16">
+        <!-- 页头 -->
+        <div class="mb-12">
+            <h1 class="text-5xl font-black mb-4 border-l-8 border-teal-400 pl-4">搜索 🔍</h1>
+            <p class="text-lg font-medium text-gray-700">在知识库中查找你需要的内容</p>
+        </div>
 
-        <!-- Search Input Card -->
-        <div class="search-card">
+        <!-- 搜索卡片 -->
+        <div class="bg-white border-4 border-black p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <!-- Pagefind 搜索框会自动注入这里 -->
             <div id="search" class="pagefind-ui"></div>
         </div>
 
-        <!-- Search Stats (shown after search) -->
-        <div id="search-stats" class="search-stats" style="display: none;">
-            <span id="result-count"></span>
-            <p>找到相关结果</p>
+        <!-- 搜索提示（仅在未搜索时显示） -->
+        <div id="search-placeholder" class="mt-8 text-center">
+            <p class="text-gray-600 font-medium">💡 输入关键词开始搜索，支持标题和内容搜索</p>
+        </div>
+
+        <!-- 搜索结果统计 -->
+        <div id="search-stats" class="mt-6 text-center" style="display: none;">
+            <p class="text-gray-700 font-medium">
+                找到 <span id="result-count" class="text-xl font-black text-teal-500"></span> 个结果
+            </p>
         </div>
     </div>
 </Layout>
@@ -52,14 +59,19 @@ import Layout from '../layouts/Layout.astro';
                 setTimeout(() => {
                     const searchInput = document.querySelector('.pagefind-ui__search-input');
                     const searchResults = document.querySelector('.pagefind-ui__results');
+                    const searchPlaceholder = document.getElementById('search-placeholder');
                     const searchStats = document.getElementById('search-stats');
                     const resultCount = document.getElementById('result-count');
 
                     if (searchInput) {
                         searchInput.addEventListener('input', () => {
-                            if (searchInput.value.length > 0) {
+                            const hasValue = searchInput.value.length > 0;
+
+                            if (hasValue) {
+                                searchPlaceholder.style.display = 'none';
                                 searchStats.style.display = 'block';
                             } else {
+                                searchPlaceholder.style.display = 'block';
                                 searchStats.style.display = 'none';
                             }
 
@@ -67,8 +79,8 @@ import Layout from '../layouts/Layout.astro';
                             if (searchResults) {
                                 const results = searchResults.querySelectorAll('.pagefind-ui__result');
                                 const count = results.length;
-                                if (searchInput.value.length > 0) {
-                                    resultCount.textContent = `${count}`;
+                                if (hasValue) {
+                                    resultCount.textContent = count;
                                 }
                             }
                         });
@@ -77,17 +89,18 @@ import Layout from '../layouts/Layout.astro';
             };
             script.onerror = () => {
                 console.warn('Pagefind 资源未找到，请确保已运行构建命令：pnpm build');
-                document.getElementById('search').innerHTML = `
-                    <div class="no-search-message">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <path d="m21 21-4.35-4.35"></path>
-                            <line x1="11" y1="8" x2="11" y2="14"></line>
-                            <line x1="7" y1="12" x2="15" y2="12"></line>
-                        </svg>
-                        <h3>搜索功能暂时不可用</h3>
-                        <p>请先运行构建命令：<code>pnpm build</code></p>
-                        <p>开发模式下可访问 <code>/search</code> 预览</p>
+                const searchContainer = document.getElementById('search');
+                searchContainer.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="inline-block bg-amber-200 border-4 border-black px-8 py-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] mb-6">
+                            <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <h3 class="text-2xl font-black mb-2">搜索功能暂时不可用</h3>
+                            <p class="text-gray-700 font-medium mb-4">请先运行构建命令：</p>
+                            <code class="bg-white border-2 border-black px-3 py-1 font-black">pnpm build</code>
+                        </div>
+                        <p class="text-gray-600 font-medium">开发模式下可访问 <code class="bg-gray-200 px-2 py-1 border border-gray-400">/search</code> 预览</p>
                     </div>
                 `;
             };
@@ -101,112 +114,74 @@ import Layout from '../layouts/Layout.astro';
 </script>
 
 <style>
-    /* 基础样式 */
-    .search-container {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 2rem 1rem;
-    }
-
-    /* Header Section */
-    .search-header {
-        text-align: center;
-        margin-bottom: 3rem;
-        animation: fadeInDown 0.6s ease-out;
-    }
-
-    .search-header h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #1a202c;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.025em;
-    }
-
-    .search-header p {
-        font-size: 1.125rem;
-        color: #6b7280;
-        margin: 0;
-    }
-
-    /* Search Card */
-    .search-card {
-        background: #ffffff;
-        border-radius: 16px;
-        /*
-border: 2px solid #f3f4f6;
-box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
-padding: 2rem;
-margin-bottom: 2rem;*/
-    }
-
-    /* Pagefind UI 覆盖样式 */
+    /* Pagefind UI 覆盖样式 - 与项目风格保持一致 */
     :global(#search) {
-        --pagefind-ui-primary: #3b82f6;
+        --pagefind-ui-primary: #000000;
         --pagefind-ui-text: #374151;
         --pagefind-ui-background: #ffffff;
-        --pagefind-ui-border: #e5e7eb;
-        --pagefind-ui-active: #3b82f6;
+        --pagefind-ui-border: #000000;
+        --pagefind-ui-active: #000000;
     }
 
     :global(.pagefind-ui__search-input) {
         width: 100%;
-        padding: 0.875rem 1rem;
+        padding: 1rem 1.5rem;
         font-size: 1rem;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
+        font-weight: 600;
+        border: 4px solid #000000;
+        border-radius: 0;
         background: #ffffff;
-        transition: all 0.3s ease;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        box-shadow: none;
     }
 
     :global(.pagefind-ui__search-input:focus) {
         outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        border-color: #000000;
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
     }
 
     :global(.pagefind-ui__results) {
-        margin-top: 2rem;
+        margin-top: 3rem;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.5rem;
     }
 
     :global(.pagefind-ui__result) {
-        padding: 1.5rem;
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
+        padding: 2rem;
+        background: #ffffff;
+        border: 4px solid #000000;
+        border-radius: 0;
         transition: all 0.2s ease;
         cursor: pointer;
+        box-shadow: 6px 6px 0px rgba(0, 0, 0, 1);
     }
 
     :global(.pagefind-ui__result:hover) {
-        background: #ffffff;
-        border-color: #3b82f6;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
-        transform: translateY(-2px);
+        transform: translateX(-4px) translateY(-4px);
+        box-shadow: 8px 8px 0px rgba(0, 0, 0, 1);
     }
 
     :global(.pagefind-ui__result-title) {
-        font-size: 1.125rem;
-        font-weight: 600;
+        font-size: 1.25rem;
+        font-weight: 900;
         color: #111827;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
         text-decoration: none;
         display: block;
         transition: color 0.2s ease;
+        line-height: 1.3;
     }
 
     :global(.pagefind-ui__result-title:hover) {
-        color: #3b82f6;
+        color: #059669;
     }
 
     :global(.pagefind-ui__result-excerpt) {
-        color: #6b7280;
-        font-size: 0.875rem;
-        line-height: 1.5;
+        color: #4b5563;
+        font-size: 1rem;
+        line-height: 1.6;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
@@ -214,150 +189,83 @@ margin-bottom: 2rem;*/
     }
 
     :global(.pagefind-ui__result-match) {
-        color: #3b82f6;
-        font-weight: 500;
-        background: #eff6ff;
-        padding: 0.125rem 0.25rem;
-        border-radius: 4px;
-        border: 1px solid #dbeafe;
+        color: #dc2626;
+        font-weight: 700;
+        background: #fecaca;
+        padding: 0.125rem 0.375rem;
+        border: 2px solid #dc2626;
     }
 
     :global(.pagefind-ui__filter) {
         display: flex;
-        gap: 0.75rem;
+        gap: 1rem;
         flex-wrap: wrap;
-        margin-top: 1.5rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 4px solid #000000;
     }
 
     :global(.pagefind-ui__filter-tag) {
-        padding: 0.5rem 1rem;
-        background: #eff6ff;
-        color: #3b82f6;
-        border: 1px solid #dbeafe;
-        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        background: #f3f4f6;
+        color: #111827;
+        border: 4px solid #000000;
+        border-radius: 0;
         font-size: 0.875rem;
-        font-weight: 500;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
         transition: all 0.2s ease;
+        cursor: pointer;
     }
 
     :global(.pagefind-ui__filter-tag:hover) {
-        background: #dbeafe;
+        background: #000000;
+        color: #ffffff;
+        transform: translateX(-2px) translateY(-2px);
+        box-shadow: 4px 4px 0px rgba(0, 0, 0, 1);
+    }
+
+    :global(.pagefind-ui__filter-tag.active) {
+        background: #000000;
+        color: #ffffff;
     }
 
     :global(.pagefind-ui__filter-clear) {
-        padding: 0.5rem 1rem;
+        padding: 0.75rem 1.5rem;
         background: #ffffff;
-        color: #6b7280;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
+        color: #111827;
+        border: 4px solid #000000;
+        border-radius: 0;
         font-size: 0.875rem;
-        font-weight: 500;
+        font-weight: 800;
         cursor: pointer;
         transition: all 0.2s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
     :global(.pagefind-ui__filter-clear:hover) {
-        background: #f3f4f6;
-        color: #374151;
-        border-color: #d1d5db;
+        background: #ef4444;
+        color: #ffffff;
+        transform: translateX(-2px) translateY(-2px);
+        box-shadow: 4px 4px 0px rgba(0, 0, 0, 1);
     }
 
-    /* Search Stats */
-    .search-stats {
+    /* Zero results state */
+    :global(.pagefind-ui__empty) {
         text-align: center;
-        margin-top: 2rem;
-        padding: 1rem;
-        background: #f0f9ff;
-        border: 1px solid #e0f2fe;
-        border-radius: 8px;
-        color: #0369a1;
-        animation: fadeIn 0.3s ease-out;
-    }
-
-    .search-stats p {
-        margin: 0;
-        font-size: 0.875rem;
-    }
-
-    #result-count {
-        font-size: 1.25rem;
+        padding: 4rem 2rem;
+        background: #fef2f2;
+        border: 4px solid #dc2626;
+        color: #991b1b;
         font-weight: 600;
+        font-size: 1.125rem;
     }
 
-    /* No Search Message */
-    .no-search-message {
-        text-align: center;
-        padding: 3rem 1rem;
-        color: #6b7280;
-    }
-
-    .no-search-message svg {
-        margin: 0 auto 1rem;
-        color: #d1d5db;
-    }
-
-    .no-search-message h3 {
-        font-size: 1.25rem;
+    /* 代码样式统一 */
+    :global(code) {
+        font-family: 'Courier New', monospace;
         font-weight: 600;
-        color: #374151;
-        margin-bottom: 0.5rem;
-    }
-
-    .no-search-message code {
-        background: #f3f4f6;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.875rem;
-        color: #374151;
-    }
-
-    /* 动画 */
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-
-    /* 响应式设计 */
-    @media (max-width: 768px) {
-        .search-container {
-            padding: 1.5rem 1rem;
-        }
-
-        .search-header h1 {
-            font-size: 2rem;
-        }
-
-        .search-card {
-            padding: 1.5rem;
-        }
-
-        :global(.pagefind-ui__result) {
-            padding: 1rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .search-header h1 {
-            font-size: 1.75rem;
-        }
-
-        .search-header p {
-            font-size: 1rem;
-        }
     }
 </style>

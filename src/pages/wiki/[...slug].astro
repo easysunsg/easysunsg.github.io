@@ -4,7 +4,7 @@ import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const allArticles = await getCollection('wiki');
-  
+
   return allArticles.map(entry => ({
     params: {
       slug: entry.id.replace(/\\/g, '/'),
@@ -28,11 +28,11 @@ const date = entry.data.date
 
 <Layout title={title}>
   <article class="max-w-4xl mx-auto px-6 py-16">
-    
+
     <!-- 返回按钮 -->
-    <a 
-      href="/wiki" 
-      class="inline-flex items gap-2 text-gray-400 hover:text-indigo-400 transition mb-8"
+    <a
+      href="/wiki"
+      class="inline-flex items-center gap-2 text-gray-700 hover:text-teal-500 transition-colors mb-8 font-black border-4 border-black bg-white px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]"
     >
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
@@ -42,22 +42,22 @@ const date = entry.data.date
 
     <!-- 文章标题 -->
     <header class="mb-10">
-      <h1 class="text-4xl font-bold text-white mb-4">{title}</h1>
-      
-      <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400">
+      <h1 class="text-5xl font-black mb-6 border-l-8 border-teal-400 pl-4">{title}</h1>
+
+      <div class="flex flex-wrap items-center gap-4">
         {date && (
-          <span class="flex items-center gap-1">
+          <span class="flex items-center gap-2 font-bold text-gray-700 bg-amber-200 px-4 py-2 border-2 border-black">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
             </svg>
             {date}
           </span>
         )}
-        
+
         {tags.length > 0 && (
           <div class="flex flex-wrap gap-2">
             {tags.map(tag => (
-              <span class="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-xs">
+              <span class="font-black uppercase tracking-wide bg-rose-500 text-white px-4 py-2 border-2 border-black text-xs">
                 #{tag}
               </span>
             ))}
@@ -67,15 +67,15 @@ const date = entry.data.date
     </header>
 
     <!-- 文章内容 -->
-    <div class="prose prose-invert prose-lg max-w-none">
+    <div class="prose prose-lg max-w-none">
       <Content />
     </div>
 
     <!-- 底部导航 -->
-    <div class="mt-16 pt-8 border-t border-gray-800">
-      <a 
-        href="/wiki" 
-        class="inline-flex items gap-2 text-indigo-400 hover:text-indigo-300 transition"
+    <div class="mt-16 pt-8 border-t-4 border-black">
+      <a
+        href="/wiki"
+        class="inline-flex items-center gap-2 font-black text-teal-500 hover:text-teal-600 transition-colors border-4 border-black bg-white px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]"
       >
         ← 返回知识库列表
       </a>
@@ -86,39 +86,39 @@ const date = entry.data.date
 
 <style is:global>
   .prose h1 {
-    @apply text-3xl font-bold text-white mt-8 mb-4;
+    @apply text-4xl font-black text-gray-900 mt-10 mb-5 border-l-4 border-teal-400 pl-4;
   }
   .prose h2 {
-    @apply text-2xl font-semibold text-white mt-8 mb-3;
+    @apply text-3xl font-black text-gray-900 mt-10 mb-5 border-l-4 border-rose-500 pl-4;
   }
   .prose h3 {
-    @apply text-xl font-medium text-white mt-6 mb-2;
+    @apply text-2xl font-black text-gray-900 mt-8 mb-4;
   }
   .prose p {
-    @apply text-gray-300 leading-relaxed mb-4;
+    @apply text-gray-700 leading-relaxed mb-5 font-medium text-lg;
   }
   .prose a {
-    @apply text-indigo-400 hover:text-indigo-300 underline;
+    @apply text-teal-600 hover:text-rose-500 underline underline-4 decoration-2 underline-offset-2 font-bold transition-colors;
   }
   .prose code {
-    @apply bg-gray-800 text-pink-400 px-2 py-0.5 rounded text-sm;
+    @apply bg-amber-200 text-gray-900 px-2 py-1 border-2 border-black font-bold text-sm;
   }
   .prose pre {
-    @apply bg-gray-900 border border-gray-800 rounded-lg p-4 mb-4 overflow-x-auto;
+    @apply bg-white border-4 border-black p-5 mb-6 overflow-x-auto shadow-[4px_4px_0px_0px_rgba(0,0,0,1)];
   }
   .prose pre code {
-    @apply bg-transparent text-gray-300 px-0 py-0;
+    @apply bg-transparent text-gray-900 px-0 py-0 border-0;
   }
   .prose ul, .prose ol {
-    @apply text-gray-300 pl-6 mb-4 list-disc;
+    @apply text-gray-700 pl-6 mb-5 list-disc font-medium text-lg;
   }
   .prose blockquote {
-    @apply border-l-4 border-indigo-500 pl-4 text-gray-400 italic my-4;
+    @apply border-l-4 border-rose-500 pl-4 text-gray-700 italic my-5 bg-amber-100 py-3;
   }
   .prose img {
-    @apply rounded-lg border border-gray-800 my-6;
+    @apply border-4 border-black my-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)];
   }
   .prose hr {
-    @apply border-gray-800 my-8;
+    @apply border-b-4 border-black my-10;
   }
 </style>

@@ -31,22 +31,22 @@ const articles = sorted.map(a => {
 
     <!-- 页头 -->
     <div class="mb-12">
-      <h1 class="text-4xl font-bold text-white mb-3">知识库 📚</h1>
-      <p class="text-gray-400">共 {articles.length} 篇笔记，持续更新中...</p>
+      <h1 class="text-5xl font-black mb-3 border-l-8 border-teal-400 pl-4">知识库 📚</h1>
+      <p class="text-lg font-medium text-gray-700">共 {articles.length} 篇笔记，持续更新中...</p>
     </div>
 
     <!-- 标签筛选 -->
     <div class="flex flex-wrap gap-2 mb-10" id="tag-filter">
       <button
         data-tag="all"
-        class="tag-btn px-3 py-1 rounded-full text-sm border border-indigo-500 bg-indigo-500/20 text-indigo-300 cursor-pointer transition"
+        class="tag-btn px-6 py-2 text-sm font-black uppercase tracking-wide border-4 border-black bg-rose-500 text-white cursor-pointer transition hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]"
       >
         全部
       </button>
       {allTags.map(tag => (
         <button
           data-tag={tag}
-          class="tag-btn px-3 py-1 rounded-full text-sm border border-gray-700 text-gray-400 hover:border-indigo-400 hover:text-white cursor-pointer transition"
+          class="tag-btn px-6 py-2 text-sm font-black uppercase tracking-wide border-4 border-black bg-white text-black cursor-pointer transition hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:bg-teal-400"
         >
           {tag}
         </button>
@@ -56,34 +56,33 @@ const articles = sorted.map(a => {
     <!-- 卡片瀑布流 -->
     <div class="columns-1 sm:columns-2 lg:columns-3 gap-5" id="card-grid">
       {articles.map(article => (
-        // 修正：所有属性现在都正确地放在了 <a> 标签内
         <a
           href={article.href}
           data-tags={article.tagsJson}
-          class="wiki-card group block bg-gray-900 border border-gray-800 hover:border-indigo-500 rounded-xl p-6 mb-5 break-inside-avoid transition"
+          class="wiki-card group block bg-white border-4 border-black p-6 mb-5 break-inside-avoid shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
         >
           {article.tags.length > 0 && (
-            <div class="flex flex-wrap gap-1 mb-3">
+            <div class="flex flex-wrap gap-2 mb-4">
               {article.tags.map(tag => (
-                <span class="text-xs bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full">
+                <span class="text-xs font-black uppercase tracking-wide bg-amber-200 text-black px-3 py-1 border-2 border-black">
                   {tag}
                 </span>
               ))}
             </div>
           )}
 
-          <h2 class="text-white font-semibold text-lg mb-2 group-hover:text-indigo-400 transition leading-snug">
+          <h2 class="font-black text-lg mb-3 group-hover:text-teal-500 transition-colors leading-snug">
             {article.title}
           </h2>
 
           {article.description && (
-            <p class="text-gray-500 text-sm leading-relaxed line-clamp-3">
+            <p class="text-gray-600 text-sm leading-relaxed line-clamp-3 font-medium">
               {article.description}
             </p>
           )}
 
           {article.date && (
-            <p class="text-gray-600 text-xs mt-4">{article.date}</p>
+            <p class="text-gray-500 text-xs mt-4 font-bold">{article.date}</p>
           )}
         </a>
       ))}
@@ -101,11 +100,11 @@ const articles = sorted.map(a => {
       const tag = btn.getAttribute('data-tag');
 
       tagBtns.forEach(b => {
-        b.classList.remove('border-indigo-500', 'bg-indigo-500/20', 'text-indigo-300');
-        b.classList.add('border-gray-700', 'text-gray-400');
+        b.classList.remove('bg-rose-500', 'text-white');
+        b.classList.add('bg-white', 'text-black');
       });
-      btn.classList.add('border-indigo-500', 'bg-indigo-500/20', 'text-indigo-300');
-      btn.classList.remove('border-gray-700', 'text-gray-400');
+      btn.classList.add('bg-rose-500', 'text-white');
+      btn.classList.remove('bg-white', 'text-black');
 
       cards.forEach(card => {
         const cardTags = JSON.parse(card.getAttribute('data-tags') || '[]');

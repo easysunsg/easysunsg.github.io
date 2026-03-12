@@ -1,23 +1,43 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = '我的个人网站' } = Astro.props;
+---
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body class="bg-gray-950 text-gray-100 min-h-screen">
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 bg-gray-950/80 backdrop-blur border-b border-gray-800">
+      <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="/" class="text-lg font-bold text-white hover:text-indigo-400 transition">
+          ✦ 我的主页
+        </a>
+        <div class="flex gap-6 text-sm text-gray-400">
+          <a href="/#about" class="hover:text-white transition">关于</a>
+          <a href="/#projects" class="hover:text-white transition">项目</a>
+          <a href="/wiki" class="hover:text-white transition">知识库</a>
+          <a href="/#contact" class="hover:text-white transition">联系</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 主内容 -->
+    <main class="pt-16">
+      <slot />
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="border-t border-gray-800 mt-24 py-8 text-center text-gray-500 text-sm">
+      <p>© 2025 · Built with Astro & ❤️</p>
+    </footer>
+  </body>
+</html>

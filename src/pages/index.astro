@@ -1,11 +1,76 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="我的个人网站">
+
+  <!-- Hero 区块 -->
+  <section class="min-h-screen flex flex-col justify-center items-center text-center px-6">
+    <div class="max-w-2xl">
+      <p class="text-indigo-400 text-sm font-medium tracking-widest uppercase mb-4">Hello, World 👋</p>
+      <h1 class="text-5xl font-bold text-white mb-6 leading-tight">
+        我是 <span class="text-indigo-400">你的名字</span>
+      </h1>
+      <p class="text-gray-400 text-lg mb-10">
+        一句话介绍自己，比如：全栈开发者 / 设计师 / 终身学习者。<br/>
+        热爱构建有趣的东西。
+      </p>
+      <div class="flex gap-4 justify-center">
+        <a href="#projects" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-lg transition font-medium">
+          查看项目 →
+        </a>
+        <a href="/wiki" class="border border-gray-600 hover:border-indigo-400 text-gray-300 hover:text-white px-6 py-3 rounded-lg transition font-medium">
+          知识库
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 关于我 -->
+  <section id="about" class="max-w-5xl mx-auto px-6 py-24">
+    <h2 class="text-3xl font-bold text-white mb-8">关于我</h2>
+    <div class="grid md:grid-cols-2 gap-12 text-gray-400 leading-relaxed">
+      <p>
+        这里写你的自我介绍，可以包括你的背景、经历、兴趣爱好等。
+        让访客快速了解你是谁。
+      </p>
+      <p>
+        这里可以写你的技能、正在做的事情，或者你的价值观。
+        真实的文字比模板更有感染力。
+      </p>
+    </div>
+  </section>
+
+  <!-- 项目展示 -->
+  <section id="projects" class="max-w-5xl mx-auto px-6 py-24">
+    <h2 class="text-3xl font-bold text-white mb-8">项目</h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[
+        { title: '项目名称 1', desc: '项目简介，一两句话描述做了什么', tag: 'TypeScript', link: '#' },
+        { title: '项目名称 2', desc: '项目简介，一两句话描述做了什么', tag: 'Python', link: '#' },
+        { title: '项目名称 3', desc: '项目简介，一两句话描述做了什么', tag: 'Astro', link: '#' },
+      ].map(p => (
+        <a href={p.link} class="group block bg-gray-900 border border-gray-800 hover:border-indigo-500 rounded-xl p-6 transition">
+          <h3 class="text-white font-semibold mb-2 group-hover:text-indigo-400 transition">{p.title}</h3>
+          <p class="text-gray-500 text-sm mb-4">{p.desc}</p>
+          <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded">{p.tag}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- 联系方式 -->
+  <section id="contact" class="max-w-5xl mx-auto px-6 py-24">
+    <h2 class="text-3xl font-bold text-white mb-4">联系我</h2>
+    <p class="text-gray-400 mb-8">有任何想法或合作意向，欢迎联系！</p>
+    <div class="flex gap-4 flex-wrap">
+      <a href="mailto:your@email.com" class="bg-gray-900 border border-gray-700 hover:border-indigo-400 text-gray-300 hover:text-white px-5 py-3 rounded-lg transition text-sm">
+        📧 Email
+      </a>
+      <a href="https://github.com/your-username" class="bg-gray-900 border border-gray-700 hover:border-indigo-400 text-gray-300 hover:text-white px-5 py-3 rounded-lg transition text-sm">
+        🐙 GitHub
+      </a>
+    </div>
+  </section>
+
 </Layout>

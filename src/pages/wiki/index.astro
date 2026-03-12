@@ -1,0 +1,120 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const allArticles = await getCollection('wiki');
+
+const sorted = allArticles.sort((a, b) => {
+  const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+  const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+  return dateB - dateA;
+});
+
+const allTags = [...new Set(sorted.flatMap(a => a.data.tags ?? []))];
+
+const articles = sorted.map(a => {
+  const id = a.id.replace(/\\/g, '/');
+  const href = '/wiki/' + id;
+  const title = a.data.title;
+  const description = a.data.description ?? '';
+  const tags = a.data.tags ?? [];
+  const tagsJson = JSON.stringify(tags);
+  const date = a.data.date
+    ? new Date(a.data.date).toLocaleDateString('zh-CN')
+    : '';
+  return { href, title, description, tags, tagsJson, date };
+});
+---
+
+<Layout title="知识库">
+  <div class="max-w-6xl mx-auto px-6 py-16">
+
+    <!-- 页头 -->
+    <div class="mb-12">
+      <h1 class="text-4xl font-bold text-white mb-3">知识库 📚</h1>
+      <p class="text-gray-400">共 {articles.length} 篇笔记，持续更新中...</p>
+    </div>
+
+    <!-- 标签筛选 -->
+    <div class="flex flex-wrap gap-2 mb-10" id="tag-filter">
+      <button
+        data-tag="all"
+        class="tag-btn px-3 py-1 rounded-full text-sm border border-indigo-500 bg-indigo-500/20 text-indigo-300 cursor-pointer transition"
+      >
+        全部
+      </button>
+      {allTags.map(tag => (
+        <button
+          data-tag={tag}
+          class="tag-btn px-3 py-1 rounded-full text-sm border border-gray-700 text-gray-400 hover:border-indigo-400 hover:text-white cursor-pointer transition"
+        >
+          {tag}
+        </button>
+      ))}
+    </div>
+
+    <!-- 卡片瀑布流 -->
+    <div class="columns-1 sm:columns-2 lg:columns-3 gap-5" id="card-grid">
+      {articles.map(article => (
+        // 修正：所有属性现在都正确地放在了 <a> 标签内
+        <a
+          href={article.href}
+          data-tags={article.tagsJson}
+          class="wiki-card group block bg-gray-900 border border-gray-800 hover:border-indigo-500 rounded-xl p-6 mb-5 break-inside-avoid transition"
+        >
+          {article.tags.length > 0 && (
+            <div class="flex flex-wrap gap-1 mb-3">
+              {article.tags.map(tag => (
+                <span class="text-xs bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <h2 class="text-white font-semibold text-lg mb-2 group-hover:text-indigo-400 transition leading-snug">
+            {article.title}
+          </h2>
+
+          {article.description && (
+            <p class="text-gray-500 text-sm leading-relaxed line-clamp-3">
+              {article.description}
+            </p>
+          )}
+
+          {article.date && (
+            <p class="text-gray-600 text-xs mt-4">{article.date}</p>
+          )}
+        </a>
+      ))}
+    </div>
+
+  </div>
+</Layout>
+
+<script>
+  const tagBtns = document.querySelectorAll('.tag-btn');
+  const cards = document.querySelectorAll('.wiki-card');
+
+  tagBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tag = btn.getAttribute('data-tag');
+
+      tagBtns.forEach(b => {
+        b.classList.remove('border-indigo-500', 'bg-indigo-500/20', 'text-indigo-300');
+        b.classList.add('border-gray-700', 'text-gray-400');
+      });
+      btn.classList.add('border-indigo-500', 'bg-indigo-500/20', 'text-indigo-300');
+      btn.classList.remove('border-gray-700', 'text-gray-400');
+
+      cards.forEach(card => {
+        const cardTags = JSON.parse(card.getAttribute('data-tags') || '[]');
+        if (tag === 'all' || cardTags.includes(tag)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

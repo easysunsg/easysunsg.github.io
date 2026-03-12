@@ -1,14 +1,11 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-
-import tailwindcss from '@tailwindcss/vite';
+import {defineConfig} from 'astro/config';
+import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-  vite: {
-    plugins: [tailwindcss()]
-  },
-
-  integrations: [mdx()]
+    site: 'https://easysunsg.github.io',
+    //base: '/easysunsg.github.io',
+    integrations: [tailwind(), mdx()]
 });

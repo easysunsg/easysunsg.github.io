@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="我的个人网站"><title>搜索</title><link rel="stylesheet" href="/_astro/Layout.BVEZcHP4.css">
+<style>#search{--pagefind-ui-primary: #000000;--pagefind-ui-text: #374151;--pagefind-ui-background: #ffffff;--pagefind-ui-border: #000000;--pagefind-ui-active: #000000}.pagefind-ui__search-input{width:100%;padding:1rem 1.5rem;font-size:1rem;font-weight:600;border:4px solid #000000;border-radius:0;background:#fff;transition:all .2s ease;box-shadow:none}.pagefind-ui__search-input:focus{outline:none;border-color:#000;box-shadow:0 0 0 4px #0000001a}.pagefind-ui__results{margin-top:3rem;display:flex;flex-direction:column;gap:1.5rem}.pagefind-ui__result{padding:2rem;background:#fff;border:4px solid #000000;border-radius:0;transition:all .2s ease;cursor:pointer;box-shadow:6px 6px #000}.pagefind-ui__result:hover{transform:translate(-4px) translateY(-4px);box-shadow:8px 8px #000}.pagefind-ui__result-title{font-size:1.25rem;font-weight:900;color:#111827;margin-bottom:1rem;text-decoration:none;display:block;transition:color .2s ease;line-height:1.3}.pagefind-ui__result-title:hover{color:#059669}.pagefind-ui__result-excerpt{color:#4b5563;font-size:1rem;line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.pagefind-ui__result-match{color:#dc2626;font-weight:700;background:#fecaca;padding:.125rem .375rem;border:2px solid #dc2626}.pagefind-ui__filter{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem;padding-top:2rem;border-top:4px solid #000000}.pagefind-ui__filter-tag{padding:.75rem 1.5rem;background:#f3f4f6;color:#111827;border:4px solid #000000;border-radius:0;font-size:.875rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;transition:all .2s ease;cursor:pointer}.pagefind-ui__filter-tag:hover{background:#000;color:#fff;transform:translate(-2px) translateY(-2px);box-shadow:4px 4px #000}.pagefind-ui__filter-tag.active{background:#000;color:#fff}.pagefind-ui__filter-clear{padding:.75rem 1.5rem;background:#fff;color:#111827;border:4px solid #000000;border-radius:0;font-size:.875rem;font-weight:800;cursor:pointer;transition:all .2s ease;text-transform:uppercase;letter-spacing:.05em}.pagefind-ui__filter-clear:hover{background:#ef4444;color:#fff;transform:translate(-2px) translateY(-2px);box-shadow:4px 4px #000}.pagefind-ui__empty{text-align:center;padding:4rem 2rem;background:#fef2f2;border:4px solid #dc2626;color:#991b1b;font-weight:600;font-size:1.125rem}code{font-family:Courier New,monospace;font-weight:600}
+</style></head> <body class="bg-amber-50 text-gray-900 min-h-screen font-sans"> <!-- 导航栏 --> <nav class="fixed top-0 w-full z-50 bg-amber-50 border-b-4 border-black"> <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center"> <a href="/" class="text-xl font-black uppercase tracking-tight hover:text-rose-500 transition-colors">
+✦ 我的主页
+</a> <div class="flex gap-6 text-sm font-bold"> <a href="/#about" class="hover:text-rose-500 transition-colors border-b-2 border-transparent hover:border-rose-500 pb-1">关于</a> <a href="/#projects" class="hover:text-rose-500 transition-colors border-b-2 border-transparent hover:border-rose-500 pb-1">项目</a> <a href="/wiki" class="hover:text-rose-500 transition-colors border-b-2 border-transparent hover:border-rose-500 pb-1">知识库</a> <a href="/search" class="hover:text-white transition">搜索</a> <a href="/#contact" class="hover:text-rose-500 transition-colors border-b-2 border-transparent hover:border-rose-500 pb-1">联系</a> </div> </div> </nav> <!-- 主内容 --> <main class="pt-20">  <div class="max-w-4xl mx-auto px-6 py-16" data-astro-cid-ipsxrsrh> <!-- 页头 --> <div class="mb-12" data-astro-cid-ipsxrsrh> <h1 class="text-5xl font-black mb-4 border-l-8 border-teal-400 pl-4" data-astro-cid-ipsxrsrh>搜索 🔍</h1> <p class="text-lg font-medium text-gray-700" data-astro-cid-ipsxrsrh>在知识库中查找你需要的内容</p> </div> <!-- 搜索卡片 --> <div class="bg-white border-4 border-black p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]" data-astro-cid-ipsxrsrh> <!-- Pagefind 搜索框会自动注入这里 --> <div id="search" class="pagefind-ui" data-astro-cid-ipsxrsrh></div> </div> <!-- 搜索提示（仅在未搜索时显示） --> <div id="search-placeholder" class="mt-8 text-center" data-astro-cid-ipsxrsrh> <p class="text-gray-600 font-medium" data-astro-cid-ipsxrsrh>💡 输入关键词开始搜索，支持标题和内容搜索</p> </div> <!-- 搜索结果统计 --> <div id="search-stats" class="mt-6 text-center" style="display: none;" data-astro-cid-ipsxrsrh> <p class="text-gray-700 font-medium" data-astro-cid-ipsxrsrh>
+找到 <span id="result-count" class="text-xl font-black text-teal-500" data-astro-cid-ipsxrsrh></span> 个结果
+</p> </div> </div>  </main> <!-- 页脚 --> <footer class="border-t-4 border-black mt-24 py-8 text-center text-gray-600 font-bold"> <p>© 2025 · Built with Astro & ❤️</p> </footer> </body></html> <script>
+    // 动态加载 Pagefind 资源，仅在构建后生效
+    const loadPagefind = async () => {
+        try {
+            // 动态创建 link 标签加载 CSS
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '/pagefind/pagefind-ui.css';
+            document.head.appendChild(link);
+
+            // 动态创建 script 标签加载 JS
+            const script = document.createElement('script');
+            script.src = '/pagefind/pagefind-ui.js';
+            script.onload = () => {
+                // @ts-ignore - PagefindUI 类型由 pagefind 库提供
+                window.pagefindUI = new PagefindUI({
+                    element: '#search',
+                    showImages: false,
+                    translations: {
+                        placeholder: '输入关键词搜索...',
+                        zero_results: '没有找到相关文章',
+                    },
+                    showEmpty: true
+                });
+
+                // 监听搜索结果变化
+                setTimeout(() => {
+                    const searchInput = document.querySelector('.pagefind-ui__search-input');
+                    const searchResults = document.querySelector('.pagefind-ui__results');
+                    const searchPlaceholder = document.getElementById('search-placeholder');
+                    const searchStats = document.getElementById('search-stats');
+                    const resultCount = document.getElementById('result-count');
+
+                    if (searchInput) {
+                        searchInput.addEventListener('input', () => {
+                            const hasValue = searchInput.value.length > 0;
+
+                            if (hasValue) {
+                                searchPlaceholder.style.display = 'none';
+                                searchStats.style.display = 'block';
+                            } else {
+                                searchPlaceholder.style.display = 'block';
+                                searchStats.style.display = 'none';
+                            }
+
+                            // 更新结果统计（等待渲染完成后再统计）
+                            if (hasValue) {
+                                setTimeout(() => {
+                                    const results = document.querySelectorAll('.pagefind-ui__result');
+                                    resultCount.textContent = String(results.length);
+                                }, 500);
+                            }
+                        });
+                    }
+                }, 1000);
+            };
+            script.onerror = () => {
+                console.warn('Pagefind 资源未找到，请确保已运行构建命令：pnpm build');
+                const searchContainer = document.getElementById('search');
+                searchContainer.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="inline-block bg-amber-200 border-4 border-black px-8 py-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] mb-6">
+                            <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <h3 class="text-2xl font-black mb-2">搜索功能暂时不可用</h3>
+                            <p class="text-gray-700 font-medium mb-4">请先运行构建命令：</p>
+                            <code class="bg-white border-2 border-black px-3 py-1 font-black">pnpm build</code>
+                        </div>
+                        <p class="text-gray-600 font-medium">开发模式下可访问 <code class="bg-gray-200 px-2 py-1 border border-gray-400">/search</code> 预览</p>
+                    </div>
+                `;
+            };
+            document.head.appendChild(script);
+        } catch (error) {
+            console.error('加载 Pagefind 失败:', error);
+        }
+    };
+
+    window.addEventListener('DOMContentLoaded', loadPagefind);
+</script>

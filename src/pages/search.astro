@@ -3,23 +3,26 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="搜索">
-    <div class="md-container">
-        <!-- Hero Banner -->
-        <div class="md-banner">
-            <h1>搜索 🔍</h1>
-            <p>搜索知识库中的所有文章</p>
+    <div class="search-container">
+        <!-- Header Section -->
+        <header class="search-header">
+            <h1>搜索文章</h1>
+            <p>输入关键词快速找到相关内容</p>
+        </header>
+
+        <!-- Search Input Card -->
+        <div class="search-card">
+            <div id="search" class="pagefind-ui"></div>
         </div>
 
-        <!-- Search Container Card -->
-        <div class="md-card md-card-large">
-            <!-- Pagefind 搜索框会自动注入这里 -->
-            <div id="search" class="pagefind-ui-wrapper"></div>
+        <!-- Search Stats (shown after search) -->
+        <div id="search-stats" class="search-stats" style="display: none;">
+            <span id="result-count"></span>
+            <p>找到相关结果</p>
         </div>
     </div>
 </Layout>
 
-<!-- Deleted:<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />-->
-<!-- Deleted:<script src="/pagefind/pagefind-ui.js" is:inline></script>-->
 <script is:inline>
     // 动态加载 Pagefind 资源，仅在构建后生效
     const loadPagefind = async () => {
@@ -35,18 +38,58 @@ import Layout from '../layouts/Layout.astro';
             script.src = '/pagefind/pagefind-ui.js';
             script.onload = () => {
                 // @ts-ignore - PagefindUI 类型由 pagefind 库提供
-                new PagefindUI({
+                window.pagefindUI = new PagefindUI({
                     element: '#search',
                     showImages: false,
                     translations: {
-                        placeholder: '搜索文章...',
+                        placeholder: '输入关键词搜索...',
                         zero_results: '没有找到相关文章',
-                    }
+                    },
+                    showEmpty: true
                 });
+
+                // 监听搜索结果变化
+                setTimeout(() => {
+                    const searchInput = document.querySelector('.pagefind-ui__search-input');
+                    const searchResults = document.querySelector('.pagefind-ui__results');
+                    const searchStats = document.getElementById('search-stats');
+                    const resultCount = document.getElementById('result-count');
+
+                    if (searchInput) {
+                        searchInput.addEventListener('input', () => {
+                            if (searchInput.value.length > 0) {
+                                searchStats.style.display = 'block';
+                            } else {
+                                searchStats.style.display = 'none';
+                            }
+
+                            // 更新结果统计
+                            if (searchResults) {
+                                const results = searchResults.querySelectorAll('.pagefind-ui__result');
+                                const count = results.length;
+                                if (searchInput.value.length > 0) {
+                                    resultCount.textContent = `${count}`;
+                                }
+                            }
+                        });
+                    }
+                }, 1000);
             };
             script.onerror = () => {
                 console.warn('Pagefind 资源未找到，请确保已运行构建命令：pnpm build');
-                document.getElementById('search').innerHTML = '<p class="md-text-muted">搜索功能将在构建后可用。开发模式下请先访问 /search 预览。</p>';
+                document.getElementById('search').innerHTML = `
+                    <div class="no-search-message">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                            <line x1="11" y1="8" x2="11" y2="14"></line>
+                            <line x1="7" y1="12" x2="15" y2="12"></line>
+                        </svg>
+                        <h3>搜索功能暂时不可用</h3>
+                        <p>请先运行构建命令：<code>pnpm build</code></p>
+                        <p>开发模式下可访问 <code>/search</code> 预览</p>
+                    </div>
+                `;
             };
             document.head.appendChild(script);
         } catch (error) {
@@ -58,184 +101,263 @@ import Layout from '../layouts/Layout.astro';
 </script>
 
 <style>
-    :global {
-        :root {
-            --bg-color: #F4EFEA;
-            --text-main: #383838;
-            --yellow-accent: #FFDE00;
-            --orange-accent: #FF9538;
-            --surface-white: #FFFFFF;
-            --focus-ring: #6FC2FF;
-        }
-    }
-
-    .md-container {
-        max-width: 1200px;
+    /* 基础样式 */
+    .search-container {
+        max-width: 900px;
         margin: 0 auto;
-        padding: 20px;
+        padding: 2rem 1rem;
     }
 
-    /* Hero Banner */
-    .md-banner {
-        background: var(--yellow-accent);
-        border: 2px solid var(--text-main);
-        border-radius: 20px;
-        padding: 60px;
-        margin-bottom: 60px;
-        box-shadow: 8px 8px 0px var(--text-main);
+    /* Header Section */
+    .search-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: fadeInDown 0.6s ease-out;
     }
 
-    .md-banner h1 {
-        font-family: 'Aeonik Mono', 'Roboto Mono', monospace;
-        font-size: 4rem;
+    .search-header h1 {
+        font-size: 2.5rem;
         font-weight: 700;
-        line-height: 1.1;
-        margin-bottom: 16px;
-        color: var(--text-main);
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.025em;
     }
 
-    .md-banner p {
-        font-family: 'Inter', sans-serif;
-        font-size: 1.25rem;
-        color: var(--text-main);
+    .search-header p {
+        font-size: 1.125rem;
+        color: #6b7280;
+        margin: 0;
     }
 
     /* Search Card */
-    .md-card {
-        background: var(--surface-white);
-        border: 2px solid var(--text-main);
+    .search-card {
+        background: #ffffff;
         border-radius: 16px;
-        padding: 40px;
-        box-shadow: 6px 6px 0px var(--text-main);
+        /*
+border: 2px solid #f3f4f6;
+box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+padding: 2rem;
+margin-bottom: 2rem;*/
     }
 
-    .md-card-large {
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
-    /* Pagefind UI Wrapper */
-    .pagefind-ui-wrapper {
-        padding: 20px;
-    }
-
-    /* Text Styles */
-    .md-text-muted {
-        font-family: 'Inter', sans-serif;
-        color: var(--text-main);
-        opacity: 0.6;
-        text-align: center;
-        padding: 40px;
-    }
-
-    /* Pagefind UI Overrides - Neo-Brutalist Style */
+    /* Pagefind UI 覆盖样式 */
     :global(#search) {
-        --pagefind-ui-primary: var(--text-main);
-        --pagefind-ui-text: var(--text-main);
-        --pagefind-ui-background: var(--surface-white);
-        --pagefind-ui-border: var(--text-main);
-        --pagefind-ui-tag: var(--yellow-accent);
-        --pagefind-ui-font: 'Inter', sans-serif;
+        --pagefind-ui-primary: #3b82f6;
+        --pagefind-ui-text: #374151;
+        --pagefind-ui-background: #ffffff;
+        --pagefind-ui-border: #e5e7eb;
+        --pagefind-ui-active: #3b82f6;
     }
 
-    :global(#search .pagefind-ui__search-input) {
-        border: 2px solid var(--text-main) !important;
-        border-radius: 8px !important;
-        padding: 12px 16px !important;
-        box-shadow: 4px 4px 0px var(--text-main) !important;
-        font-family: 'Inter', sans-serif !important;
-        font-size: 14px !important;
-        transition: all 0.2s ease !important;
+    :global(.pagefind-ui__search-input) {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        background: #ffffff;
+        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
-    :global(#search .pagefind-ui__search-input:focus) {
-        outline: 3px solid var(--focus-ring) !important;
-        outline-offset: 2px !important;
+    :global(.pagefind-ui__search-input:focus) {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
-    :global(#search .pagefind-ui__result) {
-        border: 2px solid var(--text-main) !important;
-        border-radius: 12px !important;
-        margin-bottom: 16px !important;
-        padding: 20px !important;
-        box-shadow: 4px 4px 0px var(--text-main) !important;
-        transition: all 0.2s ease !important;
+    :global(.pagefind-ui__results) {
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 
-    :global(#search .pagefind-ui__result:hover) {
-        transform: translateY(-2px) !important;
-        box-shadow: 6px 6px 0px var(--text-main) !important;
+    :global(.pagefind-ui__result) {
+        padding: 1.5rem;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+        cursor: pointer;
     }
 
-    :global(#search .pagefind-ui__result-title) {
-        font-family: 'Aeonik Mono', 'Roboto Mono', monospace !important;
-        font-weight: 700 !important;
-        color: var(--text-main) !important;
-        text-decoration: none !important;
+    :global(.pagefind-ui__result:hover) {
+        background: #ffffff;
+        border-color: #3b82f6;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        transform: translateY(-2px);
     }
 
-    :global(#search .pagefind-ui__result-title:hover) {
-        color: var(--orange-accent) !important;
+    :global(.pagefind-ui__result-title) {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 0.5rem;
+        text-decoration: none;
+        display: block;
+        transition: color 0.2s ease;
     }
 
-    :global(#search .pagefind-ui__result-excerpt) {
-        font-family: 'Inter', sans-serif !important;
-        color: var(--text-main) !important;
-        opacity: 0.8 !important;
+    :global(.pagefind-ui__result-title:hover) {
+        color: #3b82f6;
     }
 
-    :global(#search .pagefind-ui__result-match) {
-        background: var(--yellow-accent) !important;
-        color: var(--text-main) !important;
-        padding: 0 4px !important;
-        border-radius: 4px !important;
-        font-weight: 600 !important;
+    :global(.pagefind-ui__result-excerpt) {
+        color: #6b7280;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
-    :global(#search .pagefind-ui__drawer) {
-        border: 2px solid var(--text-main) !important;
-        border-radius: 16px !important;
-        box-shadow: 8px 8px 0px var(--text-main) !important;
+    :global(.pagefind-ui__result-match) {
+        color: #3b82f6;
+        font-weight: 500;
+        background: #eff6ff;
+        padding: 0.125rem 0.25rem;
+        border-radius: 4px;
+        border: 1px solid #dbeafe;
     }
 
-    :global(#search .pagefind-ui__filter-clear) {
-        border: 2px solid var(--text-main) !important;
-        border-radius: 8px !important;
-        padding: 8px 16px !important;
-        background: var(--surface-white) !important;
-        color: var(--text-main) !important;
-        box-shadow: 2px 2px 0px var(--text-main) !important;
-        font-family: 'Inter', sans-serif !important;
-        font-weight: 600 !important;
-        transition: all 0.2s ease !important;
+    :global(.pagefind-ui__filter) {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
     }
 
-    :global(#search .pagefind-ui__filter-clear:hover) {
-        transform: translate(1px, 1px) !important;
-        box-shadow: 1px 1px 0px var(--text-main) !important;
+    :global(.pagefind-ui__filter-tag) {
+        padding: 0.5rem 1rem;
+        background: #eff6ff;
+        color: #3b82f6;
+        border: 1px solid #dbeafe;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
     }
 
-    /* Responsive */
+    :global(.pagefind-ui__filter-tag:hover) {
+        background: #dbeafe;
+    }
+
+    :global(.pagefind-ui__filter-clear) {
+        padding: 0.5rem 1rem;
+        background: #ffffff;
+        color: #6b7280;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    :global(.pagefind-ui__filter-clear:hover) {
+        background: #f3f4f6;
+        color: #374151;
+        border-color: #d1d5db;
+    }
+
+    /* Search Stats */
+    .search-stats {
+        text-align: center;
+        margin-top: 2rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #e0f2fe;
+        border-radius: 8px;
+        color: #0369a1;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .search-stats p {
+        margin: 0;
+        font-size: 0.875rem;
+    }
+
+    #result-count {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    /* No Search Message */
+    .no-search-message {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6b7280;
+    }
+
+    .no-search-message svg {
+        margin: 0 auto 1rem;
+        color: #d1d5db;
+    }
+
+    .no-search-message h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+
+    .no-search-message code {
+        background: #f3f4f6;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        color: #374151;
+    }
+
+    /* 动画 */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* 响应式设计 */
     @media (max-width: 768px) {
-        .md-container {
-            padding: 16px;
+        .search-container {
+            padding: 1.5rem 1rem;
         }
 
-        .md-banner {
-            padding: 40px 24px;
-            margin-bottom: 40px;
+        .search-header h1 {
+            font-size: 2rem;
         }
 
-        .md-banner h1 {
-            font-size: 2.5rem;
+        .search-card {
+            padding: 1.5rem;
         }
 
-        .md-banner p {
+        :global(.pagefind-ui__result) {
+            padding: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .search-header h1 {
+            font-size: 1.75rem;
+        }
+
+        .search-header p {
             font-size: 1rem;
-        }
-
-        .md-card {
-            padding: 24px;
         }
     }
 </style>

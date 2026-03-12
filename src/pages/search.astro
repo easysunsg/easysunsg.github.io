@@ -1,0 +1,63 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="搜索">
+    <div class="max-w-3xl mx-auto px-6 py-16">
+
+        <h1 class="text-4xl font-bold text-white mb-8">搜索 🔍</h1>
+
+        <!-- Pagefind 搜索框会自动注入这里 -->
+        <div id="search" class="pagefind-ui"></div>
+
+    </div>
+</Layout>
+
+<!-- Deleted:<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />-->
+<!-- Deleted:<script src="/pagefind/pagefind-ui.js" is:inline></script>-->
+<script is:inline>
+    // 动态加载 Pagefind 资源，仅在构建后生效
+    const loadPagefind = async () => {
+        try {
+            // 动态创建 link 标签加载 CSS
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '/pagefind/pagefind-ui.css';
+            document.head.appendChild(link);
+
+            // 动态创建 script 标签加载 JS
+            const script = document.createElement('script');
+            script.src = '/pagefind/pagefind-ui.js';
+            script.onload = () => {
+                // @ts-ignore - PagefindUI 类型由 pagefind 库提供
+                new PagefindUI({
+                    element: '#search',
+                    showImages: false,
+                    translations: {
+                        placeholder: '搜索文章...',
+                        zero_results: '没有找到相关文章',
+                    }
+                });
+            };
+            script.onerror = () => {
+                console.warn('Pagefind 资源未找到，请确保已运行构建命令：pnpm build');
+                document.getElementById('search').innerHTML = '<p class="text-gray-400">搜索功能将在构建后可用。开发模式下请先访问 /search 预览。</p>';
+            };
+            document.head.appendChild(script);
+        } catch (error) {
+            console.error('加载 Pagefind 失败:', error);
+        }
+    };
+
+    window.addEventListener('DOMContentLoaded', loadPagefind);
+</script>
+
+<style>
+    :root {
+        --pagefind-ui-primary: #6366f1;
+        --pagefind-ui-text: #e5e7eb;
+        --pagefind-ui-background: #111827;
+        --pagefind-ui-border: #374151;
+        --pagefind-ui-tag: #1f2937;
+    }
+</style>

@@ -75,13 +75,12 @@ import Layout from '../layouts/Layout.astro';
                                 searchStats.style.display = 'none';
                             }
 
-                            // 更新结果统计
-                            if (searchResults) {
-                                const results = searchResults.querySelectorAll('.pagefind-ui__result');
-                                const count = results.length;
-                                if (hasValue) {
-                                    resultCount.textContent = count;
-                                }
+                            // 更新结果统计（等待渲染完成后再统计）
+                            if (hasValue) {
+                                setTimeout(() => {
+                                    const results = document.querySelectorAll('.pagefind-ui__result');
+                                    resultCount.textContent = String(results.length);
+                                }, 500);
                             }
                         });
                     }

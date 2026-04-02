@@ -31,7 +31,7 @@ const articles = sorted.map(a => {
 
     <!-- 页头 -->
     <div class="mb-12">
-      <h1 class="text-5xl font-black mb-3 border-l-8 border-teal-400 pl-4">知识库 📚</h1>
+      <h1 class="text-5xl font-black mb-3 border-l-8 border-teal-400 pl-4">知识库</h1>
       <p class="text-lg font-medium text-gray-700">共 {articles.length} 篇笔记，持续更新中...</p>
     </div>
 
@@ -92,8 +92,9 @@ const articles = sorted.map(a => {
 </Layout>
 
 <script>
-  const tagBtns = document.querySelectorAll('.tag-btn');
-  const cards = document.querySelectorAll('.wiki-card');
+  // 使用类型断言 as NodeListOf<HTMLElement>
+  const tagBtns = document.querySelectorAll('.tag-btn') as NodeListOf<HTMLElement>;
+  const cards = document.querySelectorAll('.wiki-card') as NodeListOf<HTMLElement>;
 
   tagBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -107,6 +108,7 @@ const articles = sorted.map(a => {
       btn.classList.remove('bg-white', 'text-black');
 
       cards.forEach(card => {
+        // 此时 card 已经被识别为 HTMLElement，拥有 style 属性
         const cardTags = JSON.parse(card.getAttribute('data-tags') || '[]');
         if (tag === 'all' || cardTags.includes(tag)) {
           card.style.display = 'block';

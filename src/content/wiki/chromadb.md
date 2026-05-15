@@ -1,3 +1,15 @@
+---
+title: ChromaDB 基础与进阶指南
+description: 全面介绍 ChromaDB 向量数据库的核心功能、运行模式、数据CRUD、元数据过滤、HNSW/SPANN索引配置以及Embedding Function使用方法。
+pubDate: 2026-05-15
+tags:
+  - AI
+  - Vector Database
+  - ChromaDB
+  - RAG
+  - Embedding
+---
+
 # ChromaDB 基础与进阶指南
 
 ## 概述
